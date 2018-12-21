@@ -35,6 +35,7 @@ int remove_option(Cell cell, int index) {
 	for (; index < BOARD - 1; index++)
 		cell.options[index] = cell.options[index + 1];
 	cell.options[BOARD - 1] = 0;
+	cell.countOptions--;
 
 	return 0;
 }
