@@ -15,7 +15,6 @@ typedef struct one_cell{
 	int countOptions;
 } Cell;
 
-int something();
 int insert_option(Cell cell, int value);
 int remove_option(Cell cell, int index);
 

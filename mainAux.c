@@ -13,11 +13,6 @@
 #define BLOCK 3
 #define BOARD 9
 
-int something() {
-
-	return 0;
-}
-
 int insert_option(Cell cell, int value) {
 	int index = 0;
 
