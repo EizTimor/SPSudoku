@@ -7,10 +7,67 @@
 
 #ifndef SOLVER_STRUCT_H_
 #define SOLVER_STRUCT_H_
-#include "mainAux.h"
+#include "game.h"
 
-int is_finished(Cell **board);
-void get_first_empty_cell(Cell **board, int *coors);
-int is_value_valid(Cell **board, int row, int col, int value);
+/*
+ * Function: is_finished
+ * ----------------------
+ * 	Receives a Board, and checks whether it is complete.
+ *
+ * 	game : the Board to check if done
+ *
+ * 	returns: 1 if all the cells in the board are filled with numbers that are not 0, 0 otherwise
+ */
+int is_finished(Board game);
+
+/*
+ * Function: is_value_valid
+ * ----------------------
+ * 	Receives a Board, and three integers representing row number, column number and value.
+ * 	It checks if the value is legal in the board at coordinates (row, col).
+ *
+ * 	game : the Board which holds the current board.
+ * 	row : an integer representing the row coordinate of a cell.
+ * 	col : an integer representing the column coordinate of a cell.
+ * 	value : an integer representing the value we are trying to verify.
+ *
+ * 	returns: 1 if the value is legal, 0 otherwise.
+ */
+int is_value_valid(Board game, int row, int col, int value);
+
+/*
+ * Function: deterministic_backtrack
+ * ----------------------
+ * 	Receives a Board, and uses backtracking algorithm to try and solve the sudoku.
+ *
+ * 	game : the Board which holds the current board.
+ *
+ * 	returns: 1 if the sudoku is solvable, 0 otherwise.
+ */
+int deterministic_backtrack(Board game);
+
+/*
+ * Function: find_options
+ * ----------------------
+ * 	Receives a Board, and two integers representing row number and column number.
+ * 	It calculates all the valid options for a specific cell in the board, and inserts them to the cell options array.
+ *
+ * 	game : the Board which holds the current board.
+ *
+ * 	returns: 1 if the sudoku is solvable, 0 otherwise.
+ */
+void find_options(Board game, int row, int col);
+
+/*
+ * Function: randomized_backtrack
+ * ----------------------
+ * 	Receives a Board, and uses randomized backtracking algorithm to try and solve the sudoku.
+ *
+ * 	game : the Board which holds the current board.
+ * 	row : an integer representing the row coordinate of a cell.
+ * 	col : an integer representing the column coordinate of a cell.
+ *
+ */
+int randomized_backtrack(Board game);
 
 #endif /* SOLVER_STRUCT_H_ */
