@@ -72,4 +72,14 @@ int insert_option(Cell cell, int value, int board_size);
  */
 int remove_option(Cell cell, int index, int board_size);
 
+/*
+ * Function: printBoard
+ * ------------------------
+ * 	prints the current board state to stdout.
+ *
+ * 	board : the board to be printed.
+ *
+ */
+void printBoard(Board board);
+
 #endif /* GAME_H_ */

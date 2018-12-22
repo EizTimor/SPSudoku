@@ -43,7 +43,7 @@ Command* parseCommand(char str[]);
 void destroyCommand(Command* cmd);
 
 /*
- * Function: destroyCommand
+ * Function: printCommand
  * ------------------------
  * 	prints the string corresponding to the command.
  *
