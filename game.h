@@ -56,7 +56,7 @@ typedef struct sudoku_board{
  *
  * 	returns: ?
  */
-int insert_option(Cell cell, int value, int board_size);
+int insert_option(Cell* cell, int value, int board_size);
 
 /*
  * Function: remove_option
@@ -70,7 +70,7 @@ int insert_option(Cell cell, int value, int board_size);
  *
  * 	returns: ?
  */
-int remove_option(Cell cell, int index, int board_size);
+int remove_option(Cell* cell, int index, int board_size);
 
 /*
  * Function: printBoard
@@ -81,5 +81,26 @@ int remove_option(Cell cell, int index, int board_size);
  *
  */
 void printBoard(Board board);
+
+/*
+ * Function: fix_cells
+ * ----------------------
+ * 	Receives a board, and an integer representing the amount of cells to be fixed, randomize which cells to fix and fixed them.
+ *
+ *	board : the board of the game.
+ * 	amount : an integer representing the amount of cells to be fixed.
+ */
+void fix_cells(Board* board, int amount);
+
+/*
+ * Function: start_game
+ * ----------------------
+ * 	Receives a board, d, and manages the game until it is finished.
+ *
+ *	board : the board of the game.
+ *
+ *	return : ?
+ */
+int start_game(Board* board);
 
 #endif /* GAME_H_ */

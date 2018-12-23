@@ -18,7 +18,7 @@
  *
  * 	returns: 1 if all the cells in the board are filled with numbers that are not 0, 0 otherwise
  */
-int is_finished(Board game);
+int is_finished(Board* game);
 
 /*
  * Function: is_value_valid
@@ -33,7 +33,7 @@ int is_finished(Board game);
  *
  * 	returns: 1 if the value is legal, 0 otherwise.
  */
-int is_value_valid(Board game, int row, int col, int value);
+int is_value_valid(Board* game, int row, int col, int value);
 
 /*
  * Function: deterministic_backtrack
@@ -44,7 +44,7 @@ int is_value_valid(Board game, int row, int col, int value);
  *
  * 	returns: 1 if the sudoku is solvable, 0 otherwise.
  */
-int deterministic_backtrack(Board game);
+int deterministic_backtrack(Board* game);
 
 /*
  * Function: find_options
@@ -56,7 +56,7 @@ int deterministic_backtrack(Board game);
  *
  * 	returns: 1 if the sudoku is solvable, 0 otherwise.
  */
-void find_options(Board game, int row, int col);
+void find_options(Board* game, int row, int col);
 
 /*
  * Function: randomized_backtrack
@@ -68,6 +68,6 @@ void find_options(Board game, int row, int col);
  * 	col : an integer representing the column coordinate of a cell.
  *
  */
-int randomized_backtrack(Board game);
+int randomized_backtrack(Board* game);
 
 #endif /* SOLVER_STRUCT_H_ */
