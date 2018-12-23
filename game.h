@@ -99,7 +99,7 @@ void fix_cells(Board* board, int amount);
  *
  *	board : the board of the game.
  *
- *	return : ?
+ *	return : -1 if EOF comes up
  */
 int start_game(Board* board);
 

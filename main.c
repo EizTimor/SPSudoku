@@ -28,7 +28,8 @@ int main(int argc, char *argv[]) {
 	/* here we need to build the board */
 
 	printBoard(board);
-	start_game(&board);
+	if (start_game(&board) == -1)
+		exit(0);
 
 
 	return 0;

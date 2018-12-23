@@ -102,16 +102,16 @@ int start_game(Board* board) {
 	while (!is_done) {
 		if (fgets(in, MAX_COMMAND, stdin) == NULL) {
 			/* Here we need to free all memory and exit game */
-			return NULL;
+			return -1;
 		}
 		current = parseCommand(in);
 
 		while (current == NULL) {
 			printf("%s", INV_COMMAND);
 			if (fgets(in, MAX_COMMAND, stdin) == NULL) {
-					/* Here we need to free all memory and exit game */
-					return NULL;
-				}
+				/* Here we need to free all memory and exit game */
+				return -1;
+			}
 			current = parseCommand(in);
 		}
 	}
