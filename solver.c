@@ -86,7 +86,7 @@ int randomized_backtrack(Board* game) {
 
 	for (; row < game->board_size; row++) {
 		for (col = 0; col < game->board_size; col++) {
-			if (game->current[row][col].value == DEFAULT && game->current[row][col].isFixed == 0) {
+			if (game->current[row][col].value == DEFAULT) {
 				find_options(game, row, col);
 				count = game->current[row][col].countOptions;
 				if (count == 1)

@@ -20,9 +20,7 @@ int main(int argc, char *argv[]) {
 
 	if (fixed_amount == -1)
 		exit(0);
-	if (argc < 2)
-		srand(0); /* not sure if 0 or something else */
-	else
+	if (argc >= 2)
 		srand(atoi(argv[1]));
 
 	/* here we need to build the board */
