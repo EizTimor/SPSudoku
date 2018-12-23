@@ -19,6 +19,9 @@
 #define VALIDATION_PASSED "Validation passed: board is solvable"
 #define VALIDATION_FAILED "Validation failed: board is unsolvable\n"
 
+/*
+ * a unique ID for each command, the parser returns the ID corresponding to the parsed command.
+ */
 enum commandID {
 	SET, HINT, VALIDATE, RESTART, EXIT
 };
@@ -57,10 +60,14 @@ void printSeparatorRow(int rowLength) {
 }
 
 void printCell(Cell *cell) {
+	int val = cell->value;
 	if (cell->isFixed) {
-		printf(" .%d", cell->value);
+		printf(" .%d", val);
 	} else {
-		printf("  %d", cell->value);
+		if (val)
+			printf("  %d", val);
+		else
+			printf("   ");
 	}
 }
 
@@ -102,19 +109,30 @@ void fix_cells(Board* board, int amount) {
 		}
 	}
 }
-
+/*
+ * prints the exit message and frees all memory.
+ */
 void exit_game(Board* board) {
 	printf("%s", EXIT_MSG);
 	free(board);
 }
 
+/*
+ * receives a board, resets its solution to its current state.
+ */
 void clear_solution(Board* board) {
 	int i, j;
 	for (i = 0; i < board->board_size; i++)
 		for (j = 0; j < board->board_size; j++)
 			board->complete[i][j] = board->current[i][j];
 }
-
+/*
+ * the function receives a command object as parsed by the parser and executes it.
+ * return: 	0 - game continue, waiting for next command
+ * 			1 - need to check if solved
+ * 			RESTART - restart the game
+ * 			EXIT - exit the game
+ */
 int executeCommand(Command* cmd, Board* board) {
 	int x, y, val;
 	switch (cmd->id) {
@@ -250,17 +268,22 @@ int start_game(Board* board) {
 	}
 	printf("%s", SUCCESS_MSG);
 
+	/*
+	 * game is complete, waiting to either "restart" or "exit" command
+	 */
 	while (1) {
 		if (fgets(in, MAX_COMMAND, stdin) == NULL) {
 			exit_game(board);
 			return 0;
 		}
 		current = parseCommand(in);
-		if (!current || !(current->id == RESTART || current->id == EXIT)){
+		if (!current || !(current->id == RESTART || current->id == EXIT)) {
 			printf("%s", INV_COMMAND);
-		} else{
-			if (current->id == RESTART) return 1;
-			if (current->id == EXIT) return 0;
+		} else {
+			if (current->id == RESTART)
+				return 1;
+			if (current->id == EXIT)
+				return 0;
 		}
 	}
 	return 1;

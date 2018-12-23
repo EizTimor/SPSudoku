@@ -5,12 +5,9 @@
  *      Author: Timor Eizenman & Ido Lerer
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include "game.h"
-#include "solver.h"
 #include "mainAux.h"
-#include "parser.h"
 
 #define DEFAULT 0
 #define SIMPLE 3
