@@ -93,6 +93,51 @@ void printBoard(Board* board);
 void fix_cells(Board* board, int amount);
 
 /*
+ * Function: create_board
+ * ----------------------
+ * 	Receives Receives three integers representing number of rows and columns in block, and amount of fixed cells,
+ * 	then it creates a board and returns it.
+ *
+ *	rows : an integer representing the number of rows in a block.
+ * 	cols : an integer representing the number of columns in a block.
+ * 	fixed : an integer representing the number of fixed cells to be fixed.
+ *
+ * 	return : a Board object, ready for sudoku game.
+ */
+Board* create_board(int rows, int cols, int fixed);
+
+/*
+ * Function: create_cell
+ * ----------------------
+ * 	Receives Receives an integer representing the board size, then creates a new cell and returns it.
+ *
+ *	board_size : an integer representing size of side of the board.
+ *
+ * 	return : a cell of sudoku board.
+ */
+Cell* create_cell(int board_size);
+
+/*
+ * Function: destroy_cell
+ * ------------------------
+ * 	Used to destroy a cell structure and free the memory allocated to it.
+ *
+ * 	cell : a pointer to the cell structure.
+ *
+ */
+void destroy_cell(Cell* cell);
+
+/*
+ * Function: destroy_board
+ * ------------------------
+ * 	Used to destroy a command structure and free the memory allocated to it.
+ *
+ * 	board : a pointer to the Board structure.
+ *
+ */
+void destroy_board(Board* board);
+
+/*
  * Function: start_game
  * ----------------------
  * 	Receives a board, d, and manages the game until it is finished.
