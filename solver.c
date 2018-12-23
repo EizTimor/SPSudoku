@@ -26,7 +26,7 @@ int is_value_valid(Board* game, int row, int col, int value) {
 	int i = 0, j = 0;
 	int rows_to_add = 0, cols_to_add = 0;
 
-	for (; i < row * col; i++) {
+	for (; i < game->board_size; i++) {
 		if (game->current[row][i].value == value)
 			return 0;
 		if (game->current[i][col].value == value)

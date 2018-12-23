@@ -181,18 +181,25 @@ int executeCommand(Command* cmd, Board* board) {
 Board* create_board(int rows, int cols, int fixed) {
 	int i, j;
 	Board* board = (Board*) malloc(sizeof(Board));
-	Cell **complete = (Cell **) malloc(sizeof(Cell *) * board->board_size);
-	Cell **current = (Cell **) malloc(sizeof(Cell *) * board->board_size);
+	Cell **complete;
+	Cell **current;
 
 	board->block_row = rows;
 	board->block_col = cols;
 	board->board_size = rows * cols;
+	complete = (Cell **) malloc(sizeof(Cell *) * board->board_size);
+	current = (Cell **) malloc(sizeof(Cell *) * board->board_size);
 	board->complete = complete;
 	board->current = current;
+
 
 	for (i = 0; i < board->board_size; i++) {
 		complete[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
 		current[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
+		for (j = 0; j < board->board_size; j++) {
+			complete[i][j] = *create_cell(board->board_size);
+			current[i][j] = *create_cell(board->board_size);
+		}
 	}
 
 	fix_cells(board, fixed);
@@ -214,7 +221,7 @@ Cell* create_cell(int board_size) {
 	cell->countOptions = 0;
 	cell->isFixed = 0;
 	cell->value = DEFAULT;
-	cell->options = (int*) malloc(sizeof(int) * board_size);
+	cell->options = (int *) malloc(sizeof(int) * board_size);
 
 	return cell;
 }
