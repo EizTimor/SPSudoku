@@ -17,13 +17,14 @@
 int main(int argc, char *argv[]) {
 	Board* board;
 	int game_active = 1, fixed_amount;
+
+	if (argc >= 2)
+		srand(atoi(argv[1]));
 	while (game_active) {
 		fixed_amount = get_fixed_amount();
 
 		if (fixed_amount == -1)
 			exit(0);
-		if (argc >= 2)
-			srand(atoi(argv[1]));
 
 		board = create_board(SIMPLE, SIMPLE, fixed_amount);
 		game_active = start_game(board);

@@ -13,10 +13,10 @@
 
 #define DEFAULT 0
 #define MAX_COMMAND 1024
-#define INV_COMMAND "Error: invalid command/n"
+#define INV_COMMAND "Error: invalid command\n"
 #define EXIT_MSG "Exiting...\n"
-#define SUCCESS_MSG "Puzzle solved successfully"
-#define VALIDATION_PASSED "Validation passed: board is solvable"
+#define SUCCESS_MSG "Puzzle solved successfully\n"
+#define VALIDATION_PASSED "Validation passed: board is solvable\n"
 #define VALIDATION_FAILED "Validation failed: board is unsolvable\n"
 
 /*
@@ -141,11 +141,11 @@ int executeCommand(Command* cmd, Board* board) {
 		y = cmd->params[1] - 1;
 		val = cmd->params[2];
 		if (board->current[y][x].isFixed) {
-			printf("Error: cell is fixed");
+			printf("Error: cell is fixed\n");
 			return 0;
 		}
-		if (!is_value_valid(board, y, x, val)) {
-			printf("Error: value is invalid");
+		if (!is_value_valid(board, y, x, val, 1)) {
+			printf("Error: value is invalid\n");
 			return 0;
 		}
 		board->current[y][x].value = val;
@@ -155,7 +155,7 @@ int executeCommand(Command* cmd, Board* board) {
 	case HINT:
 		x = cmd->params[0] - 1;
 		y = cmd->params[1] - 1;
-		printf("Hint: set cell to %d", board->current[y][x].value);
+		printf("Hint: set cell to %d\n", board->complete[y][x].value);
 		return 0;
 
 	case VALIDATE:
@@ -271,6 +271,7 @@ int start_game(Board* board) {
 		}
 		if (to_check)
 			is_done = is_finished(board, 1);
+		current = NULL;
 	}
 	printf("%s", SUCCESS_MSG);
 
@@ -291,6 +292,7 @@ int start_game(Board* board) {
 			if (current->id == EXIT)
 				return 0;
 		}
+		current = NULL;
 	}
 	return 1;
 }

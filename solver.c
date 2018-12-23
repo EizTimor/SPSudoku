@@ -27,15 +27,23 @@ int is_finished(Board* game, int type) {
 	return 1;
 }
 
-int is_value_valid(Board* game, int row, int col, int value) {
+int is_value_valid(Board* game, int row, int col, int value, int type) {
 	int i = 0, j = 0;
 	int rows_to_add = 0, cols_to_add = 0;
 
 	for (; i < game->board_size; i++) {
-		if (game->complete[row][i].value == value)
-			return 0;
-		if (game->complete[i][col].value == value)
-			return 0;
+		if (type) {
+			if (game->current[row][i].value == value)
+				return 0;
+			if (game->current[i][col].value == value)
+				return 0;
+		}
+		else {
+			if (game->complete[row][i].value == value)
+				return 0;
+			if (game->complete[i][col].value == value)
+				return 0;
+		}
 	}
 
 	rows_to_add = (row / game->block_row) * game->block_row;
@@ -43,8 +51,13 @@ int is_value_valid(Board* game, int row, int col, int value) {
 
 	for (i = rows_to_add; i < rows_to_add + game->block_row; i++)
 		for (j = cols_to_add; j < cols_to_add + game->block_col; j++)
-			if (game->complete[i][j].value == value)
-				return 0;
+			if (type) {
+				if (game->current[i][j].value == value)
+					return 0;
+			}
+			else
+				if (game->complete[i][j].value == value)
+					return 0;
 
 	return 1;
 }
@@ -60,7 +73,7 @@ int deterministic_backtrack(Board* game) {
 		for (col = 0; col < game->board_size; col++) {
 			if (game->complete[row][col].value == DEFAULT && game->complete[row][col].isFixed == 0) {
 				for (value = 1; value <= game->board_size; value++) {
-					if (is_value_valid(game, row, col, value)) {
+					if (is_value_valid(game, row, col, value, 0)) {
 						game->complete[row][col].value = value;
 						if (deterministic_backtrack(game))
 							return 1;
@@ -78,7 +91,7 @@ void find_options(Board* game, int row, int col) {
 	int value = 1;
 
 	for (; value <= game->board_size; value++)
-		if (is_value_valid(game, row, col, value))
+		if (is_value_valid(game, row, col, value, 0))
 			insert_option(&game->complete[row][col], value, game->board_size);
 }
 

@@ -24,17 +24,18 @@ int is_finished(Board* game, int type);
 /*
  * Function: is_value_valid
  * ----------------------
- * 	Receives a Board, and three integers representing row number, column number and value.
+ * 	Receives a Board, and four integers representing row number, column number, value, and which board to check.
  * 	It checks if the value is legal in the board at coordinates (row, col).
  *
  * 	game : the Board which holds the current board.
  * 	row : an integer representing the row coordinate of a cell.
  * 	col : an integer representing the column coordinate of a cell.
  * 	value : an integer representing the value we are trying to verify.
+ * 	type : determines which board to check.
  *
  * 	returns: 1 if the value is legal, 0 otherwise.
  */
-int is_value_valid(Board* game, int row, int col, int value);
+int is_value_valid(Board* game, int row, int col, int value, int type);
 
 /*
  * Function: deterministic_backtrack

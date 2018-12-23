@@ -26,7 +26,7 @@ int get_fixed_amount() {
 			return -1;
 		}
 	}
-
+	while(getchar() != '\n');
 	return fixed_amount;
 }
 
