@@ -14,6 +14,7 @@
 
 #define DEFAULT 0
 #define SIMPLE 3
+#define SUCCESS "Puzzle solved successfully"
 
 int main(int argc, char *argv[]) {
 	Board* board;
@@ -29,6 +30,8 @@ int main(int argc, char *argv[]) {
 	if (start_game(&board) == -1)
 		exit(0);
 
+	printBoard(&board);
+	printf("%s", SUCCESS);
 
 	return 0;
 }

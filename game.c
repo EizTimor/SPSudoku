@@ -14,6 +14,7 @@
 #define DEFAULT 0
 #define MAX_COMMAND 1024
 #define INV_COMMAND "Error: invalid command/n"
+#define EXIT "Exiting...\n"
 
 int insert_option(Cell* cell, int value, int board_size) {
 	int index = 0;
@@ -168,8 +169,8 @@ int start_game(Board* board) {
 	while (!is_done) {
 		while (current == NULL) {
 			if (fgets(in, MAX_COMMAND, stdin) == NULL) {
-				/* Here we need to free all memory and exit game */
-				return 0;
+				exit_gmae(board);
+				return -1;
 			}
 			current = parseCommand(in);
 			if (!current) printf("%s", INV_COMMAND);
@@ -178,4 +179,9 @@ int start_game(Board* board) {
 		is_done = is_finished(board);
 	}
 	return 1;
+}
+
+void exit_game(Board* board) {
+	printf("%s", EXIT);
+	free(board);
 }
