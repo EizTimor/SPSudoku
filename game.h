@@ -80,7 +80,7 @@ int remove_option(Cell* cell, int index, int board_size);
  * 	board : the board to be printed.
  *
  */
-void printBoard(Board board);
+void printBoard(Board* board);
 
 /*
  * Function: fix_cells

@@ -48,20 +48,20 @@ void printSeparatorRow(int rowLength) {
 	free(line);
 }
 
-void printCell(Cell cell){
-	if (cell.isFixed){
-		printf(" .%d", cell.value);
+void printCell(Cell *cell){
+	if (cell->isFixed){
+		printf(" .%d", cell->value);
 	} else {
-		printf("  %d", cell.value);
+		printf("  %d", cell->value);
 	}
 }
 
-void printRow(Board board, int index) {
+void printRow(Board *board, int index) {
 	int j = 0, i;
 	printf("|");
-	while(j < board.board_size){
-		for (i = 0; i < board.block_col; i++){
-			printCell(board.current[index][j]);
+	while(j < board->board_size){
+		for (i = 0; i < board->block_col; i++){
+			printCell(&board->current[index][j]);
 			j++;
 		}
 		printf(" |");
@@ -69,12 +69,12 @@ void printRow(Board board, int index) {
 	printf("\n");
 }
 
-void printBoard(Board board) {
+void printBoard(Board* board) {
 	int index = 0, j;
-	int rowLength = board.block_row * (3 * board.block_col + 2) + 2;
+	int rowLength = board->block_row * (3 * board->block_col + 2) + 2;
 	printSeparatorRow(rowLength);
-	while (index < board.board_size) {
-		for (j = 0; j < board.block_row; j++){
+	while (index < board->board_size) {
+		for (j = 0; j < board->block_row; j++){
 			printRow(board, index);
 			index++;
 		}
