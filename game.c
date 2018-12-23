@@ -100,6 +100,11 @@ void fix_cells(Board* board, int amount) {
 	}
 }
 
+void exit_game(Board* board) {
+	printf("%s", EXIT_MSG);
+	free(board);
+}
+
 int executeCommand(Command* cmd, Board* board) {
 	int x, y, val;
 	switch (cmd->id) {
@@ -116,6 +121,7 @@ int executeCommand(Command* cmd, Board* board) {
 			return 0;
 		}
 		board->current[y][x].value = val;
+		printBoard(board);
 		return 1;
 	case HINT:
 		x = cmd->params[0];
@@ -128,7 +134,8 @@ int executeCommand(Command* cmd, Board* board) {
 
 		break;
 	case EXIT:
-		break;
+		exit_game(board);
+		return -1;
 	}
 	return 0;
 }
@@ -196,11 +203,6 @@ void destroy_board(Board* board) {
 	free(board);
 }
 
-void exit_game(Board* board) {
-	printf("%s", EXIT_MSG);
-	free(board);
-}
-
 int start_game(Board* board) {
 	int is_done = 0, to_check = 0;
 	char in[MAX_COMMAND];
@@ -217,6 +219,9 @@ int start_game(Board* board) {
 				printf("%s", INV_COMMAND);
 		}
 		to_check = executeCommand(current, board);
+		if (to_check == -1){
+			break;
+		}
 		if (to_check)
 			is_done = is_finished(board);
 	}
