@@ -94,26 +94,25 @@ void fix_cells(Board* board, int amount) {
 		}
 	}
 }
+void executeCommand(Command* cmd){
+
+}
 
 int start_game(Board* board) {
-	int is_done = is_finished(board);
+	int is_done = 0;
 	char in[MAX_COMMAND];
 	Command* current;
 	while (!is_done) {
-		if (fgets(in, MAX_COMMAND, stdin) == NULL) {
-			/* Here we need to free all memory and exit game */
-			return -1;
-		}
-		current = parseCommand(in);
-
 		while (current == NULL) {
-			printf("%s", INV_COMMAND);
 			if (fgets(in, MAX_COMMAND, stdin) == NULL) {
 				/* Here we need to free all memory and exit game */
-				return -1;
+				return 0;
 			}
 			current = parseCommand(in);
+			if (!current) printf("%s", INV_COMMAND);
 		}
+		executeCommand(current);
+		is_done = is_finished(board);
 	}
 	return 1;
 }
