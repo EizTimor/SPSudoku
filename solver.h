@@ -12,13 +12,14 @@
 /*
  * Function: is_finished
  * ----------------------
- * 	Receives a Board, and checks whether it is complete.
+ * 	Receives a Board, and an integer representing which board to check, and checks whether it is complete.
  *
  * 	game : the Board to check if done
+ * 	type : determines which board to check.
  *
  * 	returns: 1 if all the cells in the board are filled with numbers that are not 0, 0 otherwise
  */
-int is_finished(Board* game);
+int is_finished(Board* game, int type);
 
 /*
  * Function: is_value_valid

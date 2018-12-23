@@ -192,7 +192,6 @@ Board* create_board(int rows, int cols, int fixed) {
 	board->complete = complete;
 	board->current = current;
 
-
 	for (i = 0; i < board->board_size; i++) {
 		complete[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
 		current[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
@@ -271,7 +270,7 @@ int start_game(Board* board) {
 			return 1;
 		}
 		if (to_check)
-			is_done = is_finished(board);
+			is_done = is_finished(board, 1);
 	}
 	printf("%s", SUCCESS_MSG);
 

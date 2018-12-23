@@ -5,9 +5,11 @@
  *      Author: Timor Eizenman & Ido Lerer
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "game.h"
 #include "mainAux.h"
+#include <time.h>
 
 #define DEFAULT 0
 #define SIMPLE 3
@@ -24,7 +26,6 @@ int main(int argc, char *argv[]) {
 			srand(atoi(argv[1]));
 
 		board = create_board(SIMPLE, SIMPLE, fixed_amount);
-
 		game_active = start_game(board);
 	}
 	return 0;
