@@ -15,6 +15,9 @@
 #define MAX_COMMAND 1024
 #define INV_COMMAND "Error: invalid command/n"
 #define EXIT_MSG "Exiting...\n"
+#define SUCCESS_MSG "Puzzle solved successfully"
+#define VALIDATION_PASSED "Validation passed: board is solvable"
+#define VALIDATION_FAILED "Validation failed: board is unsolvable\n"
 
 enum commandID {
 	SET, HINT, VALIDATE, RESTART, EXIT
@@ -105,6 +108,13 @@ void exit_game(Board* board) {
 	free(board);
 }
 
+void clear_solution(Board* board) {
+	int i, j;
+	for (i = 0; i < board->board_size; i++)
+		for (j = 0; j < board->board_size; j++)
+			board->complete[i][j] = board->current[i][j];
+}
+
 int executeCommand(Command* cmd, Board* board) {
 	int x, y, val;
 	switch (cmd->id) {
@@ -123,28 +133,31 @@ int executeCommand(Command* cmd, Board* board) {
 		board->current[y][x].value = val;
 		printBoard(board);
 		return 1;
+
 	case HINT:
 		x = cmd->params[0];
 		y = cmd->params[1];
 		printf("Hint: set cell to %d", board->current[y][x].value);
 		return 0;
+
 	case VALIDATE:
+		clear_solution(board);
+		if (deterministic_backtrack(board)) {
+			printf("%s", VALIDATION_PASSED);
+		} else {
+			printf("%s", VALIDATION_FAILED);
+		}
+		return 0;
 
 	case RESTART:
+		free(board);
+		return RESTART;
 
-		break;
 	case EXIT:
 		exit_game(board);
-		return -1;
+		return EXIT;
 	}
 	return 0;
-}
-
-void clear_solution(Board* board) {
-	int i, j;
-	for (i = 0; i < board->board_size; i++)
-		for (j = 0; j < board->board_size; j++)
-			board->complete[i][j] = board->current[i][j];
 }
 
 Board* create_board(int rows, int cols, int fixed) {
@@ -169,7 +182,7 @@ Board* create_board(int rows, int cols, int fixed) {
 
 	for (i = 0; i < board->board_size; i++)
 		for (j = 0; j < board->board_size; j++)
-			if (complete[i][j].isFixed){
+			if (complete[i][j].isFixed) {
 				current[i][j].value = complete[i][j].value;
 				current[i][j].isFixed = 1;
 			}
@@ -219,18 +232,36 @@ int start_game(Board* board) {
 		while (current == NULL) {
 			if (fgets(in, MAX_COMMAND, stdin) == NULL) {
 				exit_game(board);
-				return -1;
+				return 0;
 			}
 			current = parseCommand(in);
 			if (!current)
 				printf("%s", INV_COMMAND);
 		}
 		to_check = executeCommand(current, board);
-		if (to_check == -1){
-			break;
+		if (to_check == EXIT) {
+			return 0;
+		}
+		if (to_check == RESTART) {
+			return 1;
 		}
 		if (to_check)
 			is_done = is_finished(board);
+	}
+	printf("%s", SUCCESS_MSG);
+
+	while (1) {
+		if (fgets(in, MAX_COMMAND, stdin) == NULL) {
+			exit_game(board);
+			return 0;
+		}
+		current = parseCommand(in);
+		if (!current || !(current->id == RESTART || current->id == EXIT)){
+			printf("%s", INV_COMMAND);
+		} else{
+			if (current->id == RESTART) return 1;
+			if (current->id == EXIT) return 0;
+		}
 	}
 	return 1;
 }
