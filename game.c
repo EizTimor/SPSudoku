@@ -15,88 +15,9 @@
 #define MAX_COMMAND 1024
 #define INV_COMMAND "Error: invalid command/n"
 
-int insert_option(Cell* cell, int value, int board_size) {
-	int index = 0;
-
-	for (; index < board_size; index++)
-		if (cell->options[index] == DEFAULT) {
-			cell->options[index] = value;
-			break;
-		}
-	cell->countOptions++;
-
-	return 1;
-}
-
-int remove_option(Cell* cell, int index, int board_size) {
-	for (; index < board_size - 1; index++)
-		cell->options[index] = cell->options[index + 1];
-	cell->options[board_size - 1] = 0;
-	cell->countOptions--;
-
-	return 0;
-}
-
-void printSeparatorRow(int rowLength) {
-	int i;
-	char *line = (char*) malloc(rowLength * sizeof(char));
-	for (i = 0; i < rowLength - 1; i++) {
-		line[i] = '-';
-	}
-	line[rowLength - 1] = '\0';
-	printf("%s\n", line);
-	free(line);
-}
-
-void printCell(Cell *cell){
-	if (cell->isFixed){
-		printf(" .%d", cell->value);
-	} else {
-		printf("  %d", cell->value);
-	}
-}
-
-void printRow(Board *board, int index) {
-	int j = 0, i;
-	printf("|");
-	while(j < board->board_size){
-		for (i = 0; i < board->block_col; i++){
-			printCell(&board->current[index][j]);
-			j++;
-		}
-		printf(" |");
-	}
-	printf("\n");
-}
-
-void printBoard(Board* board) {
-	int index = 0, j;
-	int rowLength = board->block_row * (3 * board->block_col + 2) + 2;
-	printSeparatorRow(rowLength);
-	while (index < board->board_size) {
-		for (j = 0; j < board->block_row; j++){
-			printRow(board, index);
-			index++;
-		}
-		printSeparatorRow(rowLength);
-	}
-	printf("\n");
-}
-
-void fix_cells(Board* board, int amount) {
-	int row, col;
-	while (amount > 0) {
-		row = rand() % board->board_size;
-		col = rand() % board->board_size;
-		if (board->current[row][col].isFixed == 0) {
-			board->current[row][col].isFixed = 1;
-			amount--;
-		}
-	}
-}
-void executeCommand(Command* cmd){
-
-}
+enum commandID {
+	SET, HINT, VALIDATE, RESTART, EXIT
+};
 
 Board* create_board(int rows, int cols, int fixed) {
 	int i;
@@ -143,10 +64,124 @@ void destroy_board(Board* board) {
 	return;
 }
 
+int insert_option(Cell* cell, int value, int board_size) {
+	int index = 0;
+
+	for (; index < board_size; index++)
+		if (cell->options[index] == DEFAULT) {
+			cell->options[index] = value;
+			break;
+		}
+	cell->countOptions++;
+
+	return 1;
+}
+
+int remove_option(Cell* cell, int index, int board_size) {
+	for (; index < board_size - 1; index++)
+		cell->options[index] = cell->options[index + 1];
+	cell->options[board_size - 1] = 0;
+	cell->countOptions--;
+
+	return 0;
+}
+
+void printSeparatorRow(int rowLength) {
+	int i;
+	char *line = (char*) malloc(rowLength * sizeof(char));
+	for (i = 0; i < rowLength - 1; i++) {
+		line[i] = '-';
+	}
+	line[rowLength - 1] = '\0';
+	printf("%s\n", line);
+	free(line);
+}
+
+void printCell(Cell *cell) {
+	if (cell->isFixed) {
+		printf(" .%d", cell->value);
+	} else {
+		printf("  %d", cell->value);
+	}
+}
+
+void printRow(Board *board, int index) {
+	int j = 0, i;
+	printf("|");
+	while (j < board->board_size) {
+		for (i = 0; i < board->block_col; i++) {
+			printCell(&board->current[index][j]);
+			j++;
+		}
+		printf(" |");
+	}
+	printf("\n");
+}
+
+void printBoard(Board* board) {
+	int index = 0, j;
+	int rowLength = board->block_row * (3 * board->block_col + 2) + 2;
+	printSeparatorRow(rowLength);
+	while (index < board->board_size) {
+		for (j = 0; j < board->block_row; j++) {
+			printRow(board, index);
+			index++;
+		}
+		printSeparatorRow(rowLength);
+	}
+	printf("\n");
+}
+
+void fix_cells(Board* board, int amount) {
+	int row, col;
+	while (amount > 0) {
+		row = rand() % board->board_size;
+		col = rand() % board->board_size;
+		if (board->current[row][col].isFixed == 0) {
+			board->current[row][col].isFixed = 1;
+			amount--;
+		}
+	}
+}
+
+int executeCommand(Command* cmd, Board* board) {
+	int x, y, val;
+	switch (cmd->id) {
+	case SET:
+		x = cmd->params[0];
+		y = cmd->params[1];
+		val = cmd->params[2];
+		if (board->current[y][x].isFixed) {
+			printf("Error: cell is fixed");
+			return 0;
+		}
+		if (!is_value_valid(board, y, x, val)) {
+			printf("Error: value is invalid");
+			return 0;
+		}
+		board->current[y][x].value = val;
+		return 1;
+	case HINT:
+		x = cmd->params[0];
+		y = cmd->params[1];
+		printf("Hint: set cell to %d", board->current[y][x].value);
+		return 0;
+	case VALIDATE:
+
+	case RESTART:
+
+		break;
+	case EXIT:
+		break;
+	}
+	return 0;
+}
+
 int start_game(Board* board) {
-	int is_done = 0;
+	int is_done = 0, to_check = 0;
 	char in[MAX_COMMAND];
 	Command* current;
+	printBoard(board);
 	while (!is_done) {
 		while (current == NULL) {
 			if (fgets(in, MAX_COMMAND, stdin) == NULL) {
@@ -154,10 +189,12 @@ int start_game(Board* board) {
 				return 0;
 			}
 			current = parseCommand(in);
-			if (!current) printf("%s", INV_COMMAND);
+			if (!current)
+				printf("%s", INV_COMMAND);
 		}
-		executeCommand(current);
-		is_done = is_finished(board);
+		to_check = executeCommand(current, board);
+		if (to_check)
+			is_done = is_finished(board);
 	}
 	return 1;
 }
