@@ -93,6 +93,15 @@ void printBoard(Board* board);
 void fix_cells(Board* board, int amount);
 
 /*
+ * Function: clear_solution
+ * ----------------------
+ * 	Receives a board, and changes the complete version to be exactly like current for validation.
+ *
+ *	board : the board of the game.
+ */
+void clear_solution(Board* board);
+
+/*
  * Function: create_board
  * ----------------------
  * 	Receives Receives three integers representing number of rows and columns in block, and amount of fixed cells,
@@ -140,12 +149,21 @@ void destroy_board(Board* board);
 /*
  * Function: start_game
  * ----------------------
- * 	Receives a board, d, and manages the game until it is finished.
+ * 	Receives a board, and manages the game until it is finished.
  *
  *	board : the board of the game.
  *
  *	return : -1 if EOF comes up
  */
 int start_game(Board* board);
+
+/*
+ * Function: exit_game
+ * ----------------------
+ * 	Receives a board, and frees it's resources.
+ *
+ *	board : the board of the game.
+ */
+void exit_game(Board* board);
 
 #endif /* GAME_H_ */

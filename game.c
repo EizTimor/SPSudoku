@@ -133,6 +133,13 @@ int executeCommand(Command* cmd, Board* board) {
 	return 0;
 }
 
+void clear_solution(Board* board) {
+	int i, j;
+	for (i = 0; i < board->board_size; i++)
+		for (j = 0; j < board->board_size; j++)
+			board->complete[i][j] = board->current[i][j];
+}
+
 Board* create_board(int rows, int cols, int fixed) {
 	int i, j;
 	Board* board = (Board*) malloc(sizeof(Board));

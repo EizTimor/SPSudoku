@@ -53,15 +53,15 @@ int deterministic_backtrack(Board* game) {
 
 	for (; row < game->board_size; row++) {
 		for (col = 0; col < game->board_size; col++) {
-			if (game->current[row][col].value == DEFAULT && game->current[row][col].isFixed == 0) {
+			if (game->complete[row][col].value == DEFAULT && game->complete[row][col].isFixed == 0) {
 				for (value = 1; value <= game->board_size; value++) {
 					if (is_value_valid(game, row, col, value)) {
-						game->current[row][col].value = value;
+						game->complete[row][col].value = value;
 						if (deterministic_backtrack(game))
 							return 1;
 					}
 				}
-				game->current[row][col].value = DEFAULT;
+				game->complete[row][col].value = DEFAULT;
 				return 0;
 			}
 		}
@@ -74,7 +74,7 @@ void find_options(Board* game, int row, int col) {
 
 	for (; value < game->board_size; value++)
 		if (is_value_valid(game, row, col, value))
-			insert_option(&game->current[row][col], value, game->board_size);
+			insert_option(&game->complete[row][col], value, game->board_size);
 }
 
 int randomized_backtrack(Board* game) {
@@ -86,24 +86,24 @@ int randomized_backtrack(Board* game) {
 
 	for (; row < game->board_size; row++) {
 		for (col = 0; col < game->board_size; col++) {
-			if (game->current[row][col].value == DEFAULT) {
+			if (game->complete[row][col].value == DEFAULT) {
 				find_options(game, row, col);
-				count = game->current[row][col].countOptions;
+				count = game->complete[row][col].countOptions;
 				if (count == 1)
 					index = 0;
 
 				for (; i <= count; i++) {
-					index = rand() % game->current[row][col].countOptions;
-					value = game->current[row][col].options[index];
-					game->current[row][col].value = value;
+					index = rand() % game->complete[row][col].countOptions;
+					value = game->complete[row][col].options[index];
+					game->complete[row][col].value = value;
 					if (randomized_backtrack(game))
 						return 1;
 
-					game->current[row][col].countOptions--;
-					remove_option(&game->current[row][col], index, game->board_size);
+					game->complete[row][col].countOptions--;
+					remove_option(&game->complete[row][col], index, game->board_size);
 				}
 
-				game->current[row][col].value = DEFAULT;
+				game->complete[row][col].value = DEFAULT;
 				return 0;
 			}
 		}
