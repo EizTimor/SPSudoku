@@ -95,8 +95,53 @@ void fix_cells(Board* board, int amount) {
 	}
 }
 
+Board* create_board(int rows, int cols, int fixed) {
+	int i;
+	Board* board = (Board*) malloc(sizeof(Board));
+	Cell **b = (Cell **) malloc(sizeof(Cell *) * board->board_size);
+
+	board->block_row = rows;
+	board->block_col = cols;
+	board->board_size = rows * cols;
+	board->complete = b;
+
+	for (i = 0; i < board->board_size; i++) {
+		b[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
+	}
+
+	fix_cells(board, fixed);
+	randomized_backtrack(board);
+
+	return board;
+}
+
+Cell* create_cell(int board_size) {
+	Cell* cell = (Cell*) malloc(sizeof(Cell));
+
+	cell->countOptions = 0;
+	cell->isFixed = 0;
+	cell->value = DEFAULT;
+	cell->options = (int*) malloc(sizeof(int) * board_size);
+
+	return cell;
+}
+
+void destroy_cell(Cell* cell) {
+	if (!cell)
+		return;
+	free(cell);
+	return;
+}
+
+void destroy_board(Board* board) {
+	if (!board)
+		return;
+	free(board);
+	return;
+}
+
 int start_game(Board* board) {
-	int is_done = is_finished(board);
+	int is_done = 0;
 	char in[MAX_COMMAND];
 	Command* current;
 	while (!is_done) {
