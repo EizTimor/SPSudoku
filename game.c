@@ -119,8 +119,8 @@ int executeCommand(Command* cmd, Board* board) {
 	int x, y, val;
 	switch (cmd->id) {
 	case SET:
-		x = cmd->params[0];
-		y = cmd->params[1];
+		x = cmd->params[0] - 1;
+		y = cmd->params[1] - 1;
 		val = cmd->params[2];
 		if (board->current[y][x].isFixed) {
 			printf("Error: cell is fixed");
@@ -135,8 +135,8 @@ int executeCommand(Command* cmd, Board* board) {
 		return 1;
 
 	case HINT:
-		x = cmd->params[0];
-		y = cmd->params[1];
+		x = cmd->params[0] - 1;
+		y = cmd->params[1] - 1;
 		printf("Hint: set cell to %d", board->current[y][x].value);
 		return 0;
 
