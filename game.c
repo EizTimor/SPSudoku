@@ -250,7 +250,7 @@ void destroy_board(Board* board) {
 int start_game(Board* board) {
 	int is_done = 0, to_check = 0;
 	char in[MAX_COMMAND];
-	Command* current;
+	Command* current = NULL;
 	printBoard(board);
 	while (!is_done) {
 		while (current == NULL) {
