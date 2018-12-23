@@ -13,9 +13,10 @@
 #include "parser.h"
 
 #define DEFAULT 0
+#define SIMPLE 3
 
 int main(int argc, char *argv[]) {
-	Board board;
+	Board* board;
 	int fixed_amount = get_fixed_amount();
 
 	if (fixed_amount == -1)
@@ -23,7 +24,7 @@ int main(int argc, char *argv[]) {
 	if (argc >= 2)
 		srand(atoi(argv[1]));
 
-	/* here we need to build the board */
+	board = create_board(SIMPLE, SIMPLE, fixed_amount);
 
 	if (start_game(&board) == -1)
 		exit(0);

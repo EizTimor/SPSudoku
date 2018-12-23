@@ -88,8 +88,8 @@ void fix_cells(Board* board, int amount) {
 	while (amount > 0) {
 		row = rand() % board->board_size;
 		col = rand() % board->board_size;
-		if (board->current[row][col].isFixed == 0) {
-			board->current[row][col].isFixed = 1;
+		if (board->complete[row][col].isFixed == 0) {
+			board->complete[row][col].isFixed = 1;
 			amount--;
 		}
 	}
@@ -99,21 +99,31 @@ void executeCommand(Command* cmd){
 }
 
 Board* create_board(int rows, int cols, int fixed) {
-	int i;
+	int i, j;
 	Board* board = (Board*) malloc(sizeof(Board));
-	Cell **b = (Cell **) malloc(sizeof(Cell *) * board->board_size);
+	Cell **complete = (Cell **) malloc(sizeof(Cell *) * board->board_size);
+	Cell **current = (Cell **) malloc(sizeof(Cell *) * board->board_size);
 
 	board->block_row = rows;
 	board->block_col = cols;
 	board->board_size = rows * cols;
-	board->complete = b;
+	board->complete = complete;
+	board->current = current;
 
 	for (i = 0; i < board->board_size; i++) {
-		b[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
+		complete[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
+		current[i] = (Cell *) malloc(sizeof(Cell) * board->board_size);
 	}
 
 	fix_cells(board, fixed);
 	randomized_backtrack(board);
+
+	for (i = 0; i < board->board_size; i++)
+		for (j = 0; j < board->board_size; j++)
+			if (complete[i][j].isFixed){
+				current[i][j].value = complete[i][j].value;
+				current[i][j].isFixed = 1;
+			}
 
 	return board;
 }
@@ -132,15 +142,23 @@ Cell* create_cell(int board_size) {
 void destroy_cell(Cell* cell) {
 	if (!cell)
 		return;
+	free(cell->options);
 	free(cell);
-	return;
 }
 
 void destroy_board(Board* board) {
+	int i, j;
 	if (!board)
 		return;
+	for (i = 0; i < board->board_size; i++) {
+		for (j = 0; j < board->board_size; j++) {
+			free(board->complete[i][j]);
+			free(board->current[i][j]);
+		}
+		free(board->complete[i]);
+		free(board->current[i]);
+	}
 	free(board);
-	return;
 }
 
 int start_game(Board* board) {
