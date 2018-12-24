@@ -287,10 +287,13 @@ int start_game(Board* board) {
 		if (!current || !(current->id == RESTART || current->id == EXIT)) {
 			printf("%s", INV_COMMAND);
 		} else {
-			if (current->id == RESTART)
+			switch (executeCommand(current, board)) {
+			case RESTART:
 				return 1;
-			if (current->id == EXIT)
+
+			case EXIT:
 				return 0;
+			}
 		}
 		current = NULL;
 	}
