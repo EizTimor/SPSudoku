@@ -106,8 +106,8 @@ void printBoard(Board* board) {
 void fix_cells(Board* board, int amount) {
 	int row, col;
 	while (amount > 0) {
-		row = rand() % board->board_size;
 		col = rand() % board->board_size;
+		row = rand() % board->board_size;
 		if (board->complete[row][col].isFixed == 0) {
 			board->complete[row][col].isFixed = 1;
 			amount--;
@@ -222,8 +222,8 @@ Board* create_board(int rows, int cols, int fixed) {
 		}
 	}
 
-	fix_cells(board, fixed);
 	randomized_backtrack(board);
+	fix_cells(board, fixed);
 
 	for (i = 0; i < board->board_size; i++)
 		for (j = 0; j < board->board_size; j++)
