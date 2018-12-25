@@ -52,7 +52,7 @@ int remove_option(Cell* cell, int index, int board_size) {
 void printSeparatorRow(int rowLength) {
 	int i;
 	char *line = (char*) malloc(rowLength * sizeof(char));
-	if (line == NULL){
+	if (line == NULL) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
@@ -100,7 +100,6 @@ void printBoard(Board* board) {
 		}
 		printSeparatorRow(rowLength);
 	}
-	printf("\n");
 }
 
 void fix_cells(Board* board, int amount) {
@@ -188,7 +187,7 @@ Board* create_board(int rows, int cols, int fixed) {
 	Board* board = (Board*) malloc(sizeof(Board));
 	Cell **complete;
 	Cell **current;
-	if (board == NULL){
+	if (board == NULL) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
@@ -196,11 +195,11 @@ Board* create_board(int rows, int cols, int fixed) {
 	board->block_col = cols;
 	board->board_size = rows * cols;
 	if ((complete = (Cell **) malloc(sizeof(Cell *) * board->board_size))
-			== NULL){
+			== NULL) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
-	if ((current = (Cell **) malloc(sizeof(Cell *) * board->board_size)) == NULL){
+	if ((current = (Cell **) malloc(sizeof(Cell *) * board->board_size)) == NULL) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
@@ -208,11 +207,13 @@ Board* create_board(int rows, int cols, int fixed) {
 	board->current = current;
 
 	for (i = 0; i < board->board_size; i++) {
-		if ((complete[i] = (Cell *) malloc(sizeof(Cell) * board->board_size)) == NULL){
+		if ((complete[i] = (Cell *) malloc(sizeof(Cell) * board->board_size))
+				== NULL) {
 			printf(MALLOC_ERROR);
 			exit(0);
 		}
-		if ((current[i] = (Cell *) malloc(sizeof(Cell) * board->board_size)) == NULL){
+		if ((current[i] = (Cell *) malloc(sizeof(Cell) * board->board_size))
+				== NULL) {
 			printf(MALLOC_ERROR);
 			exit(0);
 		}
@@ -237,14 +238,14 @@ Board* create_board(int rows, int cols, int fixed) {
 
 Cell* create_cell(int board_size) {
 	Cell* cell = (Cell*) malloc(sizeof(Cell));
-	if (cell == NULL){
+	if (cell == NULL) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
 	cell->countOptions = 0;
 	cell->isFixed = 0;
 	cell->value = DEFAULT;
-	if ((cell->options = (int *) malloc(sizeof(int) * board_size)) == NULL){
+	if ((cell->options = (int *) malloc(sizeof(int) * board_size)) == NULL) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
@@ -281,16 +282,18 @@ int start_game(Board* board) {
 	while (!is_done) {
 		while (current == NULL) {
 			if (fgets(in, MAX_COMMAND, stdin) == NULL) {
-				if (ferror(stdin)){
+				if (ferror(stdin)) {
 					printf(FGETS_ERROR);
 					exit(0);
 				}
 				exit_game(board);
 				return 0;
 			}
-			current = parseCommand(in);
-			if (!current)
-				printf("%s", INV_COMMAND);
+			if (in[0] != '\n') {
+				current = parseCommand(in);
+				if (!current)
+					printf("%s", INV_COMMAND);
+			}
 		}
 		to_check = executeCommand(current, board);
 		if (to_check == EXIT) {

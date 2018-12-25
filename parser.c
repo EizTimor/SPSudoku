@@ -62,15 +62,17 @@ void printCommand(Command* cmd) {
  * a function used to get the command id from its name.
  */
 int getCommandType(char *type) {
-	if (strcmp(type, "set") == 0)
+	if (!type || type == '\0')
+		return -1;
+	if (!strcmp(type, "set"))
 		return SET;
-	if (strcmp(type, "hint") == 0)
+	if (!strcmp(type, "hint"))
 		return HINT;
-	if (strcmp(type, "validate") == 0)
+	if (!strcmp(type, "validate"))
 		return VALIDATE;
-	if (strcmp(type, "restart") == 0)
+	if (!strcmp(type, "restart"))
 		return RESTART;
-	if (strcmp(type, "exit") == 0)
+	if (!strcmp(type, "exit"))
 		return EXIT;
 	return -1;
 }
@@ -78,10 +80,8 @@ int getCommandType(char *type) {
 Command* parseCommand(char *str) {
 	const char delim[] = " \t\r\n";
 	int params[3] = { 0 }, i = 0, type;
-
 	char *token = strtok(str, delim);
 	type = getCommandType(token);
-
 	switch (type) {
 	case SET:
 		for (; i < 3; i++) {
