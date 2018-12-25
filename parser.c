@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include "parser.h"
 
+#define MALLOC_ERROR "Error: malloc has failed\n"
+
 enum commandID {
 	SET, HINT, VALIDATE, RESTART, EXIT
 };
@@ -16,6 +18,10 @@ enum commandID {
 Command* createCommand(int id, int params[3]) {
 	int i;
 	Command* cmd = (Command*) malloc(sizeof(Command));
+	if (cmd == NULL) {
+		printf(MALLOC_ERROR);
+		exit(0);
+	}
 	cmd->id = id;
 	for (i = 0; i < 3; i++) {
 		cmd->params[i] = params[i];
