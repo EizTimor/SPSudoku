@@ -118,13 +118,14 @@ Board* create_board(int rows, int cols, int fixed);
 /*
  * Function: create_cell
  * ----------------------
- * 	Receives Receives an integer representing the board size, then creates a new cell and returns it.
+ * 	Receives a cell and an integer representing the board size, then creates a new cell and returns it.
  *
+ *	cell : the cell to initialize
  *	board_size : an integer representing size of side of the board.
  *
  * 	return : a cell of sudoku board.
  */
-Cell* create_cell(int board_size);
+void create_cell(Cell* cell, int board_size);
 
 /*
  * Function: destroy_cell

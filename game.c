@@ -215,8 +215,8 @@ Board* create_board(int rows, int cols, int fixed) {
 			exit(0);
 		}
 		for (j = 0; j < board->board_size; j++) {
-			complete[i][j] = *create_cell(board->board_size);
-			current[i][j] = *create_cell(board->board_size);
+			create_cell(&complete[i][j], board->board_size);
+			create_cell(&current[i][j], board->board_size);
 		}
 	}
 
@@ -233,13 +233,9 @@ Board* create_board(int rows, int cols, int fixed) {
 	return board;
 }
 
-Cell* create_cell(int board_size) {
+void create_cell(Cell* cell, int board_size) {
 	int i;
-	Cell* cell = (Cell*) malloc(sizeof(Cell));
-	if (cell == NULL) {
-		printf(MALLOC_ERROR);
-		exit(0);
-	}
+
 	cell->countOptions = 0;
 	cell->isFixed = 0;
 	cell->value = DEFAULT;
@@ -249,7 +245,6 @@ Cell* create_cell(int board_size) {
 	}
 	for (i = 0; i < board_size; i++)
 		cell->options[i] = 0;
-	return cell;
 }
 
 void destroy_cell(Cell* cell) {
@@ -258,7 +253,6 @@ void destroy_cell(Cell* cell) {
 	if (cell->options) {
 		free(cell->options);
 	}
-	/*free(cell);*/
 }
 
 void destroy_board(Board* board) {
@@ -275,6 +269,8 @@ void destroy_board(Board* board) {
 		if (board->current[i])
 			free(board->current[i]);
 	}
+	free(board->complete);
+	free(board->current);
 	free(board);
 }
 
@@ -291,6 +287,7 @@ int start_game(Board* board) {
 					exit(0);
 				}
 				exit_game(board);
+				destroyCommand(current);
 				return 0;
 			}
 			if (in[0] != '\n') {
@@ -301,13 +298,16 @@ int start_game(Board* board) {
 		}
 		to_check = executeCommand(current, board);
 		if (to_check == EXIT) {
+			destroyCommand(current);
 			return 0;
 		}
 		if (to_check == RESTART) {
+			destroyCommand(current);
 			return 1;
 		}
 		if (to_check)
 			is_done = is_finished(board, 1);
+		destroyCommand(current);
 		current = NULL;
 	}
 	printf("%s", SUCCESS_MSG);
@@ -326,12 +326,15 @@ int start_game(Board* board) {
 		} else {
 			switch (executeCommand(current, board)) {
 			case RESTART:
+				destroyCommand(current);
 				return 1;
 
 			case EXIT:
+				destroyCommand(current);
 				return 0;
 			}
 		}
+		destroyCommand(current);
 		current = NULL;
 	}
 	return 1;
