@@ -15,6 +15,7 @@
 
 int get_fixed_amount() {
 	int fixed_amount = -1;
+	char temp;
 	printf("%s", START);
 	if (scanf("%d", &fixed_amount) == EOF) {
 		printf("%s", EXIT);
@@ -24,7 +25,6 @@ int get_fixed_amount() {
 		printf("%s%s", NOTNUM, EXIT);
 		return -1;
 	}
-	/* not a number */
 	while (fixed_amount < 0 || 80 < fixed_amount) {
 		printf("%s%s", AGAIN, START);
 		if (scanf("%d", &fixed_amount) == EOF) {
@@ -32,7 +32,7 @@ int get_fixed_amount() {
 			return -1;
 		}
 	}
-	while(getchar() != '\n');
+	while ((temp = getchar()) != EOF && temp != '\n');
 	return fixed_amount;
 }
 

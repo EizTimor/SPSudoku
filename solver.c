@@ -101,7 +101,6 @@ int randomized_backtrack(Board* game) {
 
 	if (is_finished(game, 0) == 1)
 		return 1;
-
 	for (; row < game->board_size; row++) {
 		for (col = 0; col < game->board_size; col++) {
 			if (game->complete[row][col].value == DEFAULT) {

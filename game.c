@@ -118,7 +118,7 @@ void fix_cells(Board* board, int amount) {
  */
 void exit_game(Board* board) {
 	printf("%s", EXIT_MSG);
-	free(board);
+	destroy_board(board);
 }
 
 /*
@@ -128,7 +128,7 @@ void clear_solution(Board* board) {
 	int i, j;
 	for (i = 0; i < board->board_size; i++)
 		for (j = 0; j < board->board_size; j++)
-			board->complete[i][j] = board->current[i][j];
+			board->complete[i][j].value = board->current[i][j].value;
 }
 /*
  * the function receives a command object as parsed by the parser and executes it.
@@ -172,7 +172,7 @@ int executeCommand(Command* cmd, Board* board) {
 		return 0;
 
 	case RESTART:
-		free(board);
+		destroy_board(board);
 		return RESTART;
 
 	case EXIT:
@@ -194,8 +194,7 @@ Board* create_board(int rows, int cols, int fixed) {
 	board->block_row = rows;
 	board->block_col = cols;
 	board->board_size = rows * cols;
-	if ((complete = (Cell **) malloc(sizeof(Cell *) * board->board_size))
-			== NULL) {
+	if ((complete = (Cell **) malloc(sizeof(Cell *) * board->board_size)) == NULL) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
@@ -207,13 +206,11 @@ Board* create_board(int rows, int cols, int fixed) {
 	board->current = current;
 
 	for (i = 0; i < board->board_size; i++) {
-		if ((complete[i] = (Cell *) malloc(sizeof(Cell) * board->board_size))
-				== NULL) {
+		if ((complete[i] = (Cell *) malloc(sizeof(Cell) * board->board_size)) == NULL) {
 			printf(MALLOC_ERROR);
 			exit(0);
 		}
-		if ((current[i] = (Cell *) malloc(sizeof(Cell) * board->board_size))
-				== NULL) {
+		if ((current[i] = (Cell *) malloc(sizeof(Cell) * board->board_size)) == NULL) {
 			printf(MALLOC_ERROR);
 			exit(0);
 		}
@@ -237,6 +234,7 @@ Board* create_board(int rows, int cols, int fixed) {
 }
 
 Cell* create_cell(int board_size) {
+	int i;
 	Cell* cell = (Cell*) malloc(sizeof(Cell));
 	if (cell == NULL) {
 		printf(MALLOC_ERROR);
@@ -249,27 +247,33 @@ Cell* create_cell(int board_size) {
 		printf(MALLOC_ERROR);
 		exit(0);
 	}
+	for (i = 0; i < board_size; i++)
+		cell->options[i] = 0;
 	return cell;
 }
 
 void destroy_cell(Cell* cell) {
 	if (!cell)
 		return;
-	free(cell->options);
-	free(cell);
+	if (cell->options) {
+		free(cell->options);
+	}
+	/*free(cell);*/
 }
 
 void destroy_board(Board* board) {
 	int i, j;
 	if (!board)
 		return;
-	for (i = 0; i < board->board_size; i++) {
-		for (j = 0; j < board->board_size; j++) {
-			free(&board->complete[i][j]);
-			free(&board->current[i][j]);
+	for (i = board->board_size - 1; i >= 0; i--) {
+		for (j = board->board_size - 1; j >= 0; j--) {
+			destroy_cell(&board->current[i][j]);
+			destroy_cell(&board->complete[i][j]);
 		}
-		free(board->complete[i]);
-		free(board->current[i]);
+		if (board->complete[i])
+			free(board->complete[i]);
+		if (board->current[i])
+			free(board->current[i]);
 	}
 	free(board);
 }
